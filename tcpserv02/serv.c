@@ -10,12 +10,11 @@ main(int argc, char **argv)
     struct sockaddr_in  cliaddr, servaddr;
     struct sigaction action, old_action;
 
-    //action.sa_handler = sig_chld;
-    action.sa_handler = SIG_IGN;
+    action.sa_handler = sig_chld;
     sigemptyset(&action.sa_mask);
 
     action.sa_flags = 0;
-    action.sa_flags |= SA_RESTART;
+    //action.sa_flags |= SA_RESTART;
     sigaction(SIGCHLD, &action, NULL);
 
     listenfd = socket(AF_INET, SOCK_STREAM, 0); 
