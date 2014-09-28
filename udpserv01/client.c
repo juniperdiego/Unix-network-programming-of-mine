@@ -40,9 +40,9 @@ void cli(FILE *fp, int sockfd, struct sockaddr * servaddr, socklen_t servlen)
     char    sendline[MAXLINE], recvline[MAXLINE];
     ssize_t n = 0;
     struct sockaddr_in replyaddr;
-    int i = 0;
-    char * p = NULL;
 
+    memset(sendline, 0,MAXLINE);
+    memset(recvline, 0,MAXLINE);
     while (fgets(sendline, MAXLINE, fp) != NULL) {
 
         socklen_t len =  servlen;
@@ -53,25 +53,6 @@ void cli(FILE *fp, int sockfd, struct sockaddr * servaddr, socklen_t servlen)
         printf("receive a replay from %s \n", inet_ntoa(replyaddr.sin_addr));
         printf("servlen = %d, len = %d\n", servlen, len);
 
-        i = 0;
-        p =  servaddr;
-        while(i < len)
-        {
-            printf("%02x ", (*p) & 0xff);
-            i++;
-            p++;
-        }
-        printf("\n");
-
-        i = 0;
-        p = &replyaddr;
-        while(i < len)
-        {
-            printf("%02x ", (*p) & 0xff);
-            i++;
-            p++;
-        }
-        printf("\n");
         if(len != servlen || 0 != memcmp(&replyaddr, servaddr, len))
         {
             continue;

@@ -13,6 +13,7 @@ void str_cli(FILE *fp, int sockfd)
     fd_set rset;	
     FD_ZERO(&rset);
     int maxfdp;
+    int flag = 0;
 
     while(1)
     {
@@ -28,7 +29,10 @@ void str_cli(FILE *fp, int sockfd)
         {
             if (read(sockfd, recvline, MAXLINE) == 0)
             {
-                printf("str_cli: server terminated prematurely");
+                if(flag == 1)
+                    printf("str_cli: server terminated normally");
+                else
+                    printf("str_cli: server terminated prematurely");
                 exit(0);
             }
             else
@@ -40,7 +44,11 @@ void str_cli(FILE *fp, int sockfd)
             if(fgets(sendline, MAXLINE, fp) != NULL)
                 write(sockfd, sendline, strlen(sendline));
             else
-                return;
+            {
+                FD_CLR(fileno(fp), &rset);
+                flag = 1;
+                continue;
+            }
         }
 
     }
